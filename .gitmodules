@@ -1,0 +1,3 @@
+[submodule "Lily/vendor/spdlog"]
+	path = Lily/vendor/spdlog
+	url = https://github.com/gabime/spdlog

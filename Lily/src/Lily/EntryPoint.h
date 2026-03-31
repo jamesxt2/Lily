@@ -6,7 +6,11 @@ extern Lily::Application* Lily::CreateApplication();
 
 void main(int argc, char** argv)
 {
-	printf("Lily Engine\n");
+	Lily::Log::Init();
+	LL_CORE_WARN("Init!");
+	int a = 5;
+	LL_INFO("Hello! Var={0}", a);
+
 	auto app = Lily::CreateApplication();
 	app->Run();
 	delete app;
