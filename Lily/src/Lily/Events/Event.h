@@ -1,9 +1,7 @@
 #pragma once
 
+#include "llpch.h"
 #include "Lily/Core.h"
-
-#include <string>
-#include <functional>
 
 namespace Lily {
 

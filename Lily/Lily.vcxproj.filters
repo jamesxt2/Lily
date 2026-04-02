@@ -7,6 +7,12 @@
     <Filter Include="Lily\Events">
       <UniqueIdentifier>{631458C6-CFC9-D0BB-58BE-CA92C472C7BF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lily\Platform">
+      <UniqueIdentifier>{93C0CCD8-FF80-480F-C8BB-918C343B8DEB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lily\Platform\Windows">
+      <UniqueIdentifier>{CD4D0FA3-39BA-CA9D-02AE-62FB6ED9EC05}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Lily.h" />
@@ -34,6 +40,13 @@
     <ClInclude Include="src\Lily\Log.h">
       <Filter>Lily</Filter>
     </ClInclude>
+    <ClInclude Include="src\Lily\Platform\Windows\WindowsWindow.h">
+      <Filter>Lily\Platform\Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Lily\Window.h">
+      <Filter>Lily</Filter>
+    </ClInclude>
+    <ClInclude Include="src\llpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lily\Application.cpp">
@@ -42,5 +55,9 @@
     <ClCompile Include="src\Lily\Log.cpp">
       <Filter>Lily</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lily\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Lily\Platform\Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="src\llpch.cpp" />
   </ItemGroup>
 </Project>

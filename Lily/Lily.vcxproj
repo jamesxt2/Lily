@@ -76,10 +76,11 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>LL_PLATFORM_WINDOWS;LL_BUILD_DLL;LL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -90,6 +91,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Debug-windows-x86_64\Lily\Lily.lib</ImportLibrary>
     </Link>
     <ProjectReference>
@@ -100,10 +102,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>LL_PLATFORM_WINDOWS;LL_BUILD_DLL;LL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -118,6 +121,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Release-windows-x86_64\Lily\Lily.lib</ImportLibrary>
     </Link>
     <ProjectReference>
@@ -128,10 +132,11 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Dist|x64'">
     <ClCompile>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>LL_PLATFORM_WINDOWS;LL_BUILD_DLL;LL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -146,6 +151,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ImportLibrary>..\bin\Dist-windows-x86_64\Lily\Lily.lib</ImportLibrary>
     </Link>
     <ProjectReference>
@@ -164,10 +170,22 @@
     <ClInclude Include="src\Lily\Events\KeyEvent.h" />
     <ClInclude Include="src\Lily\Events\MouseEvent.h" />
     <ClInclude Include="src\Lily\Log.h" />
+    <ClInclude Include="src\Lily\Platform\Windows\WindowsWindow.h" />
+    <ClInclude Include="src\Lily\Window.h" />
+    <ClInclude Include="src\llpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lily\Application.cpp" />
     <ClCompile Include="src\Lily\Log.cpp" />
+    <ClCompile Include="src\Lily\Platform\Windows\WindowsWindow.cpp" />
+    <ClCompile Include="src\llpch.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">
+      <Project>{154B857C-0182-860D-AA6E-6C109684020F}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
