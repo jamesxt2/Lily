@@ -1,5 +1,6 @@
 workspace "Lily"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -13,13 +14,20 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Lily/vendor/GLFW/include"
+IncludeDir["Glad"] = "Lily/vendor/Glad/include"
+IncludeDir["ImGui"] = "Lily/vendor/imgui"
+IncludeDir["glm"] = "Lily/vendor/glm"
 
 include "Lily/vendor/GLFW"
+include "Lily/vendor/Glad"
+include "Lily/vendor/imgui"
 
 project "Lily"
 	location "Lily"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir("bin/"..outputdir.."/%{prj.name}")
 	objdir("bin-int/"..outputdir.."/%{prj.name}")
@@ -30,56 +38,67 @@ project "Lily"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
 
 	includedirs
 	{
 		"%{prj.name}/vendor/spdlog/include",
 		"%{prj.name}/src",
-		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLFW}",
+		"%{IncludeDir.Glad}",
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links
 	{
 		"GLFW",
+		"Glad",
+		"ImGui",
 		"opengl32.lib"
 	}
 
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
+	}
+
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
 		{
 			"LL_PLATFORM_WINDOWS",
-			"LL_BUILD_DLL"
-		}
-
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" ..outputdir.."/Sandbox")
+			"LL_BUILD_DLL",
+			"GLFW_INCLUDE_NONE"
 		}
 
 		buildoptions "/utf-8"
 	
 	filter "configurations:Debug"
 		defines "LL_DEBUG"
-		symbols "On"
+		runtime "Debug"
+		symbols "on"
 	
 	filter "configurations:Release"
 		defines "LL_RELEASE"
-		optimize "On"
+		runtime "Release"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "LL_DIST"
-		optimize "On"
+		runtime "Release"
+		optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir("bin/"..outputdir.."/%{prj.name}")
 	objdir("bin-int/"..outputdir.."/%{prj.name}")
@@ -93,7 +112,9 @@ project "Sandbox"
 	includedirs
 	{
 		"Lily/vendor/spdlog/include",
-		"Lily/src"
+		"Lily/src",
+		"Lily/vendor",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -102,8 +123,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
-		staticruntime "On"
 		systemversion "latest"
 
 		defines
@@ -115,12 +134,15 @@ project "Sandbox"
 	
 	filter "configurations:Debug"
 		defines "LL_DEBUG"
-		symbols "On"
+		runtime "Debug"
+		symbols "on"
 	
 	filter "configurations:Release"
 		defines "LL_RELEASE"
-		optimize "On"
+		runtime "Release"
+		optimize "on"
 
 	filter "configurations:Dist"
 		defines "LL_DIST"
-		optimize "On"
+		runtime "Release"
+		optimize "on"

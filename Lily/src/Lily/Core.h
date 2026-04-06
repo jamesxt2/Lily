@@ -1,13 +1,21 @@
 #pragma once
 
 #ifdef LL_PLATFORM_WINDOWS
+#if LL_DYNAMIC_LINK
 	#ifdef LL_BUILD_DLL
 		#define LILY_API __declspec(dllexport)
 	#else
 		#define LILY_API __declspec(dllimport)
 	#endif
 #else
+	#define LILY_API
+#endif
+#else
 	#error Lily only supports Windows!
+#endif
+
+#ifdef LL_DEBUG
+	#define LL_ENABLE_ASSERTS
 #endif
 
 #ifdef LL_ENABLE_ASSERTS
@@ -19,3 +27,5 @@
 #endif
 
 #define BIT(x) (1 << x)
+
+#define LL_BIND_EVENT_FN(fn) std::bind(&fn, this, std::placeholders::_1)
