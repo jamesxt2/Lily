@@ -1368,6 +1368,9 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Lily\Renderer\Shader.h" />
+    <ClInclude Include="src\Lily\Renderer\Buffer.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lily\Application.cpp">
@@ -1400,5 +1403,8 @@
     <ClCompile Include="src\llpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lily\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Lily\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
   </ItemGroup>
 </Project>
