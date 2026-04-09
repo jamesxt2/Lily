@@ -169,6 +169,7 @@
     <ClInclude Include="src\Lily\MouseButtonCodes.h" />
     <ClInclude Include="src\Lily\Renderer\Buffer.h" />
     <ClInclude Include="src\Lily\Renderer\GraphicsContext.h" />
+    <ClInclude Include="src\Lily\Renderer\Renderer.h" />
     <ClInclude Include="src\Lily\Renderer\Shader.h" />
     <ClInclude Include="src\Lily\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
@@ -604,6 +605,7 @@
     <ClCompile Include="src\Lily\LayerStack.cpp" />
     <ClCompile Include="src\Lily\Log.cpp" />
     <ClCompile Include="src\Lily\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Lily\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Lily\Renderer\Shader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
