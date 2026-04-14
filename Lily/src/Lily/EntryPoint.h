@@ -8,8 +8,6 @@ void main(int argc, char** argv)
 {
 	Lily::Log::Init();
 	LL_CORE_WARN("Init!");
-	int a = 5;
-	LL_INFO("Hello! Var={0}", a);
 
 	auto app = Lily::CreateApplication();
 	app->Run();

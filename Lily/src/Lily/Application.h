@@ -11,6 +11,9 @@
 
 #include "Lily/Renderer/Shader.h"
 #include "Lily/Renderer/Buffer.h"
+#include "Lily/Renderer/VertexArray.h"
+
+#include "Lily/Renderer/OrthographicCamera.h"
 
 namespace Lily {
 
@@ -36,11 +39,6 @@ namespace Lily {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
-		unsigned int m_VertexArray;
-		std::unique_ptr<Shader> m_Shader;
-		std::unique_ptr<VertexBuffer> m_VertexBuffer;
-		std::unique_ptr<IndexBuffer> m_IndexBuffer;
 
 		static Application* s_Instance;
 	};
