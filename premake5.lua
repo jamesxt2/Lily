@@ -17,6 +17,7 @@ IncludeDir["GLFW"] = "Lily/vendor/GLFW/include"
 IncludeDir["Glad"] = "Lily/vendor/Glad/include"
 IncludeDir["ImGui"] = "Lily/vendor/imgui"
 IncludeDir["glm"] = "Lily/vendor/glm"
+IncludeDir["stb_image"] = "Lily/vendor/stb_image"
 
 include "Lily/vendor/GLFW"
 include "Lily/vendor/Glad"
@@ -39,6 +40,8 @@ project "Lily"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
+		"%{prj.name}/vendor/stb_image/**.cpp",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -50,7 +53,8 @@ project "Lily"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links

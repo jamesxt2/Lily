@@ -7,13 +7,10 @@
 #include "Window.h"
 #include "Events/ApplicationEvent.h"
 
+#include "Lily/Core/Timestep.h"
+
 #include "Lily/ImGui/ImGuiLayer.h"
 
-#include "Lily/Renderer/Shader.h"
-#include "Lily/Renderer/Buffer.h"
-#include "Lily/Renderer/VertexArray.h"
-
-#include "Lily/Renderer/OrthographicCamera.h"
 
 namespace Lily {
 
@@ -34,11 +31,14 @@ namespace Lily {
 		inline Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
+		bool OnWindowResize(WindowResizeEvent& e);
 
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
-		bool m_Running = true;
+		bool m_Running{ true };
+		bool m_Minimized{ false };
 		LayerStack m_LayerStack;
+		float m_LastFrameTime = 0.0f;
 
 		static Application* s_Instance;
 	};

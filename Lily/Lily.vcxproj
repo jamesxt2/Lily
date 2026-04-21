@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LL_PLATFORM_WINDOWS;LL_BUILD_DLL;GLFW_INCLUDE_NONE;LL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -101,7 +101,7 @@
       <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LL_PLATFORM_WINDOWS;LL_BUILD_DLL;GLFW_INCLUDE_NONE;LL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -129,7 +129,7 @@
       <PrecompiledHeaderFile>llpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;LL_PLATFORM_WINDOWS;LL_BUILD_DLL;GLFW_INCLUDE_NONE;LL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>vendor\spdlog\include;src;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -155,6 +155,7 @@
     <ClInclude Include="src\Lily.h" />
     <ClInclude Include="src\Lily\Application.h" />
     <ClInclude Include="src\Lily\Core.h" />
+    <ClInclude Include="src\Lily\Core\Timestep.h" />
     <ClInclude Include="src\Lily\EntryPoint.h" />
     <ClInclude Include="src\Lily\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Lily\Events\Event.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="src\Lily\LayerStack.h" />
     <ClInclude Include="src\Lily\Log.h" />
     <ClInclude Include="src\Lily\MouseButtonCodes.h" />
+    <ClInclude Include="src\Lily\OrthographicCameraController.h" />
     <ClInclude Include="src\Lily\Renderer\Buffer.h" />
     <ClInclude Include="src\Lily\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Lily\Renderer\OrthographicCamera.h" />
@@ -174,11 +176,14 @@
     <ClInclude Include="src\Lily\Renderer\Renderer.h" />
     <ClInclude Include="src\Lily\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Lily\Renderer\Shader.h" />
+    <ClInclude Include="src\Lily\Renderer\Texture.h" />
     <ClInclude Include="src\Lily\Renderer\VertexArray.h" />
     <ClInclude Include="src\Lily\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\Windows\WindowsInput.h" />
     <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
@@ -602,6 +607,7 @@
     <ClInclude Include="vendor\glm\glm\vec3.hpp" />
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
+    <ClInclude Include="vendor\stb_image\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lily\Application.cpp" />
@@ -610,22 +616,27 @@
     <ClCompile Include="src\Lily\Layer.cpp" />
     <ClCompile Include="src\Lily\LayerStack.cpp" />
     <ClCompile Include="src\Lily\Log.cpp" />
+    <ClCompile Include="src\Lily\OrthographicCameraController.cpp" />
     <ClCompile Include="src\Lily\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Lily\Renderer\OrthographicCamera.cpp" />
     <ClCompile Include="src\Lily\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Lily\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Lily\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Lily\Renderer\Shader.cpp" />
+    <ClCompile Include="src\Lily\Renderer\Texture.cpp" />
     <ClCompile Include="src\Lily\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
     <ClCompile Include="src\llpch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

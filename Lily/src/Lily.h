@@ -6,9 +6,12 @@
 #include "Lily/Layer.h"
 #include "Lily/Log.h"
 
+#include "Lily/Core/Timestep.h"
+
 #include "Lily/Input.h"
 #include "Lily/KeyCodes.h"
 #include "Lily/MouseButtonCodes.h"
+#include "Lily/OrthographicCameraController.h"
 
 #include "Lily/ImGui/ImGuiLayer.h"
 
@@ -18,6 +21,7 @@
 #include "Lily/Renderer/RenderCommand.h"
 #include "Lily/Renderer/Renderer.h"
 #include "Lily/Renderer/Shader.h"
+#include "Lily/Renderer/Texture.h"
 #include "Lily/Renderer/VertexArray.h"
 /***************Renderer*************/
 

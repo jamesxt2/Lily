@@ -1,12 +1,17 @@
 #include "Lily.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 #include "imgui/imgui.h"
+
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Lily::Layer 
 {
 public:
 	ExampleLayer()
-		: Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.f)
+		: Layer("Example"), m_CameraController(1280.f / 720.f, true)
 	{
 		m_VertexArray.reset(Lily::VertexArray::Create());
 
@@ -16,7 +21,7 @@ public:
 			0.0f, 0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<Lily::VertexBuffer> vertexBuffer;
+		Lily::Ref<Lily::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(Lily::VertexBuffer::Create(vertices, sizeof(vertices)));
 
 		Lily::BufferLayout layout = {
@@ -28,30 +33,31 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<Lily::IndexBuffer> indexBuffer;
+		Lily::Ref<Lily::IndexBuffer> indexBuffer;
 		indexBuffer.reset(Lily::IndexBuffer::Create(indices, 3));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA.reset(Lily::VertexArray::Create());
 
 		float squareVertices[] = {
-			-0.5f, -0.5f, 0.0f,
-			0.5f, -0.5f, 0.0f,
-			0.5f, 0.5f, 0.0f,
-			-0.5f, 0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.f, 0.f,
+			0.5f, -0.5f, 0.0f, 1.f, 0.f,
+			0.5f, 0.5f, 0.0f, 1.f, 1.f,
+			-0.5f, 0.5f, 0.0f, 0.f, 1.f
 		};
 
-		std::shared_ptr<Lily::VertexBuffer> squareVB;
+		Lily::Ref<Lily::VertexBuffer> squareVB;
 		squareVB.reset(Lily::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 
 		squareVB->SetLayout({
-			{ Lily::ShaderDataType::Float3, "a_Position" }
+			{ Lily::ShaderDataType::Float3, "a_Position" },
+			{ Lily::ShaderDataType::Float2, "a_TexCoord" }
 			});
 
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<Lily::IndexBuffer> squareIB;
+		Lily::Ref<Lily::IndexBuffer> squareIB;
 		squareIB.reset(Lily::IndexBuffer::Create(squareIndices, 6));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -62,6 +68,7 @@ public:
 			layout(location = 1) in vec4 a_Color;
 
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
 
 			out vec3 v_Position;
 			out vec4 v_Color;
@@ -70,7 +77,7 @@ public:
 			{
 				v_Position = a_Position;
 				v_Color = a_Color;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";  // location = 0 means at index 0, a means attribute
 
@@ -89,98 +96,118 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Lily::Shader(vertexSrc, fragmentSrc));
+		m_Shader = Lily::Shader::Create("VertexPosColor", vertexSrc, fragmentSrc);
 
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
 
 			uniform mat4 u_ViewProjection;
-
-			out vec3 v_Position;
+			uniform mat4 u_Transform;
 			
 			void main()
 			{
-				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);
 			}
 		)";  // location = 0 means at index 0, a means attribute
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
-			
-			in vec3 v_Position;
+
+			uniform vec3 u_Color;
 
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.f);
 			}
 		)";
 
-		m_BlueShader.reset(new Lily::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
+		m_FlatColorShader = Lily::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+
+
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+
+		m_Texture = Lily::Texture2D::Create("assets/textures/pistol.png");
+		m_Texture2 = Lily::Texture2D::Create("assets/textures/medical.png");
+
+		std::dynamic_pointer_cast<Lily::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<Lily::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
 	}
 
-	void OnUpdate() override
+	void OnUpdate(Lily::Timestep ts) override
 	{
-		if (Lily::Input::IsKeyPressed(LL_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed;
+		// Update
+		//LL_TRACE("Delta time: {0}s {1}ms", ts.GetSeconds(), ts.GetMilliSeconds());
 
-		else if (Lily::Input::IsKeyPressed(LL_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed;
+		m_CameraController.OnUpdate(ts);
 
-		if (Lily::Input::IsKeyPressed(LL_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed;
-
-		else if (Lily::Input::IsKeyPressed(LL_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed;
-
-		if (Lily::Input::IsKeyPressed(LL_KEY_A))
-			m_CameraRotation += m_CameraRotationSpeed;
-
-		else if (Lily::Input::IsKeyPressed(LL_KEY_D))
-			m_CameraRotation -= m_CameraRotationSpeed;
-
+		// Render
 		Lily::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		Lily::RenderCommand::Clear();
 
-		m_Camera.SetPosition(m_CameraPosition);
-		m_Camera.SetRotation(m_CameraRotation);
+		Lily::Renderer::BeginScene(m_CameraController.GetCamera());
 
-		Lily::Renderer::BeginScene(m_Camera);
-		
-		Lily::Renderer::Submit(m_BlueShader, m_SquareVA);
+		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		Lily::Renderer::Submit(m_Shader, m_VertexArray);
+		std::dynamic_pointer_cast<Lily::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<Lily::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for (int y = 0; y < 20; y++)
+		{
+			for (int x = 0; x < 20; x++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.f), pos) * scale;
+				Lily::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+			}
+		}
+
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+
+		m_Texture->Bind();
+		Lily::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		m_Texture2->Bind();
+		Lily::Renderer::Submit(textureShader, m_SquareVA,
+			glm::translate(glm::mat4(1.f), glm::vec3(0.25f, -0.25f, 0.f)) * glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		// Triangle
+		//Lily::Renderer::Submit(m_Shader, m_VertexArray);
 
 		Lily::Renderer::EndScene();
 	}
 
 	void OnImGuiRender() override
 	{
-
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
-	void OnEvent(Lily::Event& event) override
+	void OnEvent(Lily::Event& e) override
 	{
-
+		m_CameraController.OnEvent(e);
 	}
 
 	
 private:
-	std::shared_ptr<Lily::Shader> m_Shader;
-	std::shared_ptr<Lily::VertexArray> m_VertexArray;
+	Lily::ShaderLibrary m_ShaderLibrary;
 
-	std::shared_ptr<Lily::Shader> m_BlueShader;
-	std::shared_ptr<Lily::VertexArray> m_SquareVA;
+	Lily::Ref<Lily::Shader> m_Shader;
+	Lily::Ref<Lily::VertexArray> m_VertexArray;
 
-	Lily::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPosition;
-	float m_CameraRotation = 0.0f;
-	float m_CameraMoveSpeed = 0.1f;
-	float m_CameraRotationSpeed = 2.0f;
+	Lily::Ref<Lily::Shader> m_FlatColorShader;
+	Lily::Ref<Lily::VertexArray> m_SquareVA;
+
+	Lily::Ref<Lily::Texture2D> m_Texture;
+	Lily::Ref<Lily::Texture2D> m_Texture2;
+
+	Lily::OrthographicCameraController m_CameraController;
+
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
 };
 
 class Sandbox : public Lily::Application

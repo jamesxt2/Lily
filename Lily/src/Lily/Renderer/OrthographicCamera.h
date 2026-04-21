@@ -14,6 +14,8 @@ namespace Lily {
 		inline const glm::vec3& GetPosition() const { return m_Position; }
 		inline float GetRotation() const { return m_Rotation; }
 
+		void SetProjection(float left, float right, float bottom, float top);
+
 		const glm::mat4 GetProjectionMatrix() const { return m_ProjectionMatrix; }
 		const glm::mat4 GetViewMatrix() const { return m_ViewMatrix; }
 		const glm::mat4 GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
