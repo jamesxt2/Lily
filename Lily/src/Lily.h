@@ -2,16 +2,16 @@
 
 // For use by Lily applications
 
-#include "Lily/Application.h"
-#include "Lily/Layer.h"
-#include "Lily/Log.h"
+#include "Lily/Core/Application.h"
+#include "Lily/Core/Layer.h"
+#include "Lily/Core/Log.h"
 
 #include "Lily/Core/Timestep.h"
 
-#include "Lily/Input.h"
-#include "Lily/KeyCodes.h"
-#include "Lily/MouseButtonCodes.h"
-#include "Lily/OrthographicCameraController.h"
+#include "Lily/Core/Input.h"
+#include "Lily/Core/KeyCodes.h"
+#include "Lily/Core/MouseButtonCodes.h"
+#include "Lily/Renderer/OrthographicCameraController.h"
 
 #include "Lily/ImGui/ImGuiLayer.h"
 
@@ -20,11 +20,8 @@
 #include "Lily/Renderer/OrthographicCamera.h"
 #include "Lily/Renderer/RenderCommand.h"
 #include "Lily/Renderer/Renderer.h"
+#include "Lily/Renderer/Renderer2D.h"
 #include "Lily/Renderer/Shader.h"
 #include "Lily/Renderer/Texture.h"
 #include "Lily/Renderer/VertexArray.h"
 /***************Renderer*************/
-
-/************Entry Point************/
-#include "Lily/EntryPoint.h"
-/***********************************/

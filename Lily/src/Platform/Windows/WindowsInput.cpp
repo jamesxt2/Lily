@@ -1,7 +1,7 @@
 #include "llpch.h"
 #include "WindowsInput.h"
 
-#include "Lily/Application.h"
+#include "Lily/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 namespace Lily {

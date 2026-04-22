@@ -1,4 +1,5 @@
 #include "Lily.h"
+#include "Lily/Core/EntryPoint.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
 
@@ -7,13 +8,15 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Sandbox2D.h"
+
 class ExampleLayer : public Lily::Layer 
 {
 public:
 	ExampleLayer()
 		: Layer("Example"), m_CameraController(1280.f / 720.f, true)
 	{
-		m_VertexArray.reset(Lily::VertexArray::Create());
+		m_VertexArray = Lily::VertexArray::Create();
 
 		float vertices[] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -37,7 +40,7 @@ public:
 		indexBuffer.reset(Lily::IndexBuffer::Create(indices, 3));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(Lily::VertexArray::Create());
+		m_SquareVA = Lily::VertexArray::Create();
 
 		float squareVertices[] = {
 			-0.5f, -0.5f, 0.0f, 0.f, 0.f,
@@ -215,7 +218,8 @@ class Sandbox : public Lily::Application
 public:
 	Sandbox()
 	{
-		PushLayer(new ExampleLayer());
+		//PushLayer(new ExampleLayer());
+		PushLayer(new Sandbox2D());
 	}
 
 	~Sandbox()

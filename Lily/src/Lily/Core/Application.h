@@ -3,9 +3,9 @@
 #include "Core.h"
 
 #include "LayerStack.h"
-#include "Events/Event.h"
+#include "Lily/Events/Event.h"
 #include "Window.h"
-#include "Events/ApplicationEvent.h"
+#include "Lily/Events/ApplicationEvent.h"
 
 #include "Lily/Core/Timestep.h"
 

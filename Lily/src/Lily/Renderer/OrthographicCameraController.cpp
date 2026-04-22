@@ -1,8 +1,8 @@
 #include "llpch.h"
 #include "OrthographicCameraController.h"
 
-#include "Lily/Input.h"
-#include "Lily/KeyCodes.h"
+#include "Lily/Core/Input.h"
+#include "Lily/Core/KeyCodes.h"
 
 namespace Lily {
 

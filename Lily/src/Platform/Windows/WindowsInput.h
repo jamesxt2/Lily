@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lily/Input.h"
+#include "Lily/Core/Input.h"
 
 namespace Lily {
 

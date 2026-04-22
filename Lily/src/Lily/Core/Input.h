@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lily/Core.h"
+#include "Lily/Core/Core.h"
 
 namespace Lily {
 

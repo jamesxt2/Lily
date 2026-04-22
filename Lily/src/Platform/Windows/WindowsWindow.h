@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lily/Window.h"
+#include "Lily/Core/Window.h"
 #include "Lily/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>

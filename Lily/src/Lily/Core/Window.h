@@ -2,7 +2,7 @@
 
 #include "llpch.h"
 
-#include "Lily/Core.h"
+#include "Lily/Core/Core.h"
 #include "Lily/Events/Event.h"
 
 namespace Lily {
